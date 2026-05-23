@@ -1,6 +1,11 @@
-@Turnos.Api_HostAddress = http://localhost:5092
+@Api_HostAddress = http://localhost:5092/api
 
-GET {{Turnos.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+###Crear una nueva especialidad
 
-###
+POST {{Api_HostAddress}}/specialties
+Content-Type: application/json
+
+{
+  "name": "Test especialidad",
+  "description": "Descripción de la especialidad de prueba"
+}
