@@ -1,0 +1,16 @@
+﻿services:
+  postgres:
+    image: docker.io/library/postgres:18-alpine
+    container_name: turnos_postgres
+    environment:
+        POSTGRES_USER: dev_user
+        POSTGRES_PASSWORD: dev_password
+        POSTGRES_DB: turnos_db
+    ports:
+        - "5432:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql
+    
+volumes:
+    postgres_data:
+      

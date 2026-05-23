@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "efcore-patterns": {
+      "source": "aaronontheweb/dotnet-skills",
+      "sourceType": "github",
+      "skillPath": "skills/efcore-patterns/SKILL.md",
+      "computedHash": "5337e0cbae6293dee81f357dd41e008130d2c525005fa2fc3501a3931d98e41f"
+    }
+  }
+}
