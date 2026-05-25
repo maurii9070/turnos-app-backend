@@ -39,14 +39,22 @@ public sealed class TurnosDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
 
+            entity.HasIndex(e => e.Dni).IsUnique();
+
+            entity.Property(e => e.Dni)
+                .IsRequired()
+                .HasMaxLength(20);
+
             entity.HasIndex(e => e.Email).IsUnique();
 
             entity.Property(e => e.Email)
-                .IsRequired()
                 .HasMaxLength(256);
 
             entity.Property(e => e.PasswordHash)
                 .IsRequired();
+
+            entity.Property(e => e.Phone)
+                .HasMaxLength(30);
 
             entity.Property(e => e.FirstName)
                 .IsRequired()
@@ -60,6 +68,11 @@ public sealed class TurnosDbContext : DbContext
                 .HasConversion<string>()
                 .HasMaxLength(20)
                 .IsRequired();
+
+            entity.HasOne(e => e.RegisteredByUser)
+                .WithMany()
+                .HasForeignKey(e => e.RegisteredBy)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasMany(e => e.RefreshTokens)
                 .WithOne(rt => rt.User)
@@ -145,15 +158,6 @@ public sealed class TurnosDbContext : DbContext
             entity.HasKey(e => e.Id);
 
             entity.HasIndex(e => e.UserId).IsUnique();
-
-            entity.HasIndex(e => e.Dni).IsUnique();
-
-            entity.Property(e => e.Dni)
-                .IsRequired()
-                .HasMaxLength(20);
-
-            entity.Property(e => e.Phone)
-                .HasMaxLength(30);
 
             entity.HasMany(e => e.Appointments)
                 .WithOne(a => a.Patient)

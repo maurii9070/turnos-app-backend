@@ -4,8 +4,6 @@ public class Patient
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public string Dni { get; set; } = null!;
-    public string? Phone { get; set; }
     public DateOnly DateOfBirth { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
