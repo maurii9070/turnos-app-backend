@@ -1,7 +1,10 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Turnos.Api.Common;
+using Turnos.Api.Common.Contracts;
+using Turnos.Api.Common.Infrastructure;
+using Turnos.Api.Common.Responses;
 using Turnos.Api.Data;
+using Turnos.Api.Features.Auth.RegisterPatient;
 using Turnos.Api.Features.Specialties.CreateSpecialty;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +18,12 @@ builder.Services.AddDbContext<TurnosDbContext>(options =>
 // Register FluentValidation validators from the current assembly
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
-// Register feature handlers (pilot: CreateSpecialty)
+// Register common infrastructure services
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+
+// Register feature handlers
 builder.Services.AddScoped<CreateSpecialtyHandler>();
+builder.Services.AddScoped<RegisterPatientHandler>();
 
 var app = builder.Build();
 

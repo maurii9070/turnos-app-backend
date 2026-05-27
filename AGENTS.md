@@ -55,11 +55,14 @@ Features/
 
 ```
 src/Turnos.Api/
-  Common/          ← ApiResponse<T>, IEndpoint, EndpointExtensions
+  Common/
+    Contracts/     ← Reusable interfaces (IEndpoint, IPasswordHasher, etc.)
+    Infrastructure/← Cross-cutting implementations (EndpointExtensions, BCryptPasswordHasher)
+    Responses/     ← ApiResponse<T>
   Data/            ← TurnosDbContext
   Entities/        ← Domain entities + Enums/
   Features/        ← Vertical slices (Endpoint, Handler, Request, Response, Validator)
-  Migrations/        ← EF Core migration files
+  Migrations/      ← EF Core migration files
 ```
 
 ## Configuration

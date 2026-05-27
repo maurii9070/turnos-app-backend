@@ -1,4 +1,4 @@
-namespace Turnos.Api.Common;
+namespace Turnos.Api.Common.Responses;
 
 public record ApiResponse<T>(bool Success, string? Message, T? Data)
 {

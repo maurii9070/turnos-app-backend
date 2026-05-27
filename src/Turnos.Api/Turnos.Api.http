@@ -1,6 +1,19 @@
 @Api_HostAddress = http://localhost:5092/api
 
 ###
+# Registrar un nuevo paciente (manual)
+POST {{Api_HostAddress}}/auth/register-patient
+Content-Type: application/json
+
+{
+  "dni": "40565353",
+  "firstName": "Maricio",
+  "lastName": "Velazquez",
+  "password": "123123",
+  "dateOfBirth": "1996-10-29"
+}
+
+###
 # Crear una nueva especialidad
 POST {{Api_HostAddress}}/specialties
 Content-Type: application/json

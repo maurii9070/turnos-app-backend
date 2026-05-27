@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Turnos.Api.Common;
+using Turnos.Api.Common.Responses;
 using Turnos.Api.Data;
 using Turnos.Api.Entities;
 

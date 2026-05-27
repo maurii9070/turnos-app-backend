@@ -2,16 +2,16 @@ using FluentValidation;
 using Turnos.Api.Common.Contracts;
 using Turnos.Api.Common.Responses;
 
-namespace Turnos.Api.Features.Specialties.CreateSpecialty;
+namespace Turnos.Api.Features.Auth.RegisterPatient;
 
-public class CreateSpecialtyEndpoint : IEndpoint
+public class RegisterPatientEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/specialties", async (
-            CreateSpecialtyRequest request,
-            CreateSpecialtyHandler handler,
-            IValidator<CreateSpecialtyRequest> validator,
+        app.MapPost("api/auth/register-patient", async (
+            RegisterPatientRequest request,
+            RegisterPatientHandler handler,
+            IValidator<RegisterPatientRequest> validator,
             CancellationToken ct) =>
         {
             var validationResult = await validator.ValidateAsync(request, ct);
@@ -25,8 +25,8 @@ public class CreateSpecialtyEndpoint : IEndpoint
                 ? Results.Ok(result)
                 : Results.Conflict(result);
         })
-        .WithName("CreateSpecialty")
-        .Produces<ApiResponse<CreateSpecialtyResponse>>(StatusCodes.Status200OK)
+        .WithName("RegisterPatient")
+        .Produces<ApiResponse<RegisterPatientResponse>>(StatusCodes.Status200OK)
         .Produces<HttpValidationProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ApiResponse<object>>(StatusCodes.Status409Conflict);
     }

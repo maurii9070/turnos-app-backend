@@ -1,4 +1,4 @@
-namespace Turnos.Api.Common;
+namespace Turnos.Api.Common.Contracts;
 
 /// <summary>
 /// Define el contrato que deben implementar los módulos de endpoints para registrar sus rutas.
