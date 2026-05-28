@@ -1,6 +1,6 @@
 using Turnos.Api.Common.Contracts;
 
-namespace Turnos.Api.Common.Infrastructure;
+namespace Turnos.Api.Common.Security;
 
 /// <summary>
 /// Implementación de <see cref="IPasswordHasher"/> usando BCrypt.

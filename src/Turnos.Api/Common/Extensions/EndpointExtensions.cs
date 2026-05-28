@@ -1,7 +1,7 @@
 using System.Reflection;
 using Turnos.Api.Common.Contracts;
 
-namespace Turnos.Api.Common.Infrastructure;
+namespace Turnos.Api.Common.Extensions;
 
 /// <summary>
 /// Extensiones para descubrir y registrar automáticamente implementaciones de <see cref="IEndpoint"/>.

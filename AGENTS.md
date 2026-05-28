@@ -41,7 +41,7 @@ Features/
 
 **Endpoint Discovery**: `app.MapEndpoints()` in `Program.cs` scans the assembly for classes implementing `IEndpoint` (static `Map(IEndpointRouteBuilder)` method) and registers them automatically. No manual `MapXxx()` calls needed in `Program.cs`.
 
-**Handlers must be registered in DI** explicitly in `Program.cs` (e.g., `builder.Services.AddScoped<CreateSpecialtyHandler>()`). There is no auto-discovery for handlers yet.
+**Handlers must be registered in DI** via `AddTurnosHandlers()` in `ServiceCollectionExtensions.cs`. There is no auto-discovery for handlers yet.
 
 ## Database Conventions
 
@@ -56,14 +56,30 @@ Features/
 ```
 src/Turnos.Api/
   Common/
-    Contracts/     ← Reusable interfaces (IEndpoint, IPasswordHasher, etc.)
-    Infrastructure/← Cross-cutting implementations (EndpointExtensions, BCryptPasswordHasher)
+    Contracts/     ← Reusable interfaces (IEndpoint, IPasswordHasher, ITokenService)
     Responses/     ← ApiResponse<T>
+    Security/       ← Auth implementations (BCryptPasswordHasher, JwtTokenService, JwtSettings)
+    Extensions/     ← Extension methods (AuthExtensions, DatabaseExtensions, etc.)
   Data/            ← TurnosDbContext
   Entities/        ← Domain entities + Enums/
   Features/        ← Vertical slices (Endpoint, Handler, Request, Response, Validator)
   Migrations/      ← EF Core migration files
 ```
+
+### Extension Methods (Service Setup)
+
+All service configuration uses extension methods in `Common/Extensions/`:
+
+| Method | Purpose |
+|--------|---------|
+| `AddTurnosDbContext()` | EF Core + PostgreSQL + snake_case |
+| `AddTurnosAuth()` | JWT settings, JWT auth, authorization, password hasher, token service |
+| `AddTurnosRateLimiting()` | Rate limiting (5 login attempts/min) |
+| `AddTurnosHandlers()` | All feature handlers |
+
+**Middleware pipeline** (in `Program.cs`): HTTPS redirect → Rate limiter → Auth → Authorization → MapEndpoints.
+
+**Handlers are registered via `AddTurnosHandlers()`** in `ServiceCollectionExtensions.cs`, not in `Program.cs`.
 
 ## Configuration
 

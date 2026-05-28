@@ -5,10 +5,9 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Turnos.Api.Common.Contracts;
-using Turnos.Api.Common.Infrastructure;
 using Turnos.Api.Entities;
 
-namespace Turnos.Api.Common.Infrastructure;
+namespace Turnos.Api.Common.Security;
 
 public sealed class JwtTokenService(IOptions<JwtSettings> options) : ITokenService
 {
