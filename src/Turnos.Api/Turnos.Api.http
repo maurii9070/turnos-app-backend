@@ -40,7 +40,7 @@ POST {{Api_HostAddress}}/auth/refresh
 POST {{Api_HostAddress}}/auth/logout
 
 # ==========================================
-# Especialidades (requiere SuperAdmin)
+# Especialidades (algunos públicos, otros SuperAdmin)
 # ==========================================
 
 ###
@@ -54,5 +54,33 @@ Authorization: Bearer {{accessToken}}
   "name": "Test especialidad",
   "description": "Descripción de la especialidad de prueba"
 }
+
+###
+# Listar todas las especialidades activas (cualquier usuario autenticado)
+GET {{Api_HostAddress}}/specialties
+Authorization: Bearer {{accessToken}}
+
+###
+# @name getSpecialtyById
+# Obtener especialidad por ID (cualquier usuario autenticado)
+GET {{Api_HostAddress}}/specialties/{{createSpecialty.response.body.data.id}}
+Authorization: Bearer {{accessToken}}
+
+###
+# @name updateSpecialty
+# Actualizar especialidad (requiere SuperAdmin)
+PUT {{Api_HostAddress}}/specialties/{{createSpecialty.response.body.data.id}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "Test especialidad actualizada",
+  "description": "Descripción actualizada"
+}
+
+###
+# Eliminar especialidad (soft-delete, requiere SuperAdmin)
+DELETE {{Api_HostAddress}}/specialties/{{createSpecialty.response.body.data.id}}
+Authorization: Bearer {{accessToken}}
 
 ###
