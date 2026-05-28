@@ -20,7 +20,7 @@ public class RegisterPatientEndpoint : IEndpoint
                 return Results.ValidationProblem(validationResult.ToDictionary());
             }
 
-            var result = await handler.Handle(request, ct);
+            var result = await handler.HandleAsync(request, ct);
             return result.Success
                 ? Results.Ok(result)
                 : Results.Conflict(result);

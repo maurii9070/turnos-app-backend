@@ -9,7 +9,7 @@ namespace Turnos.Api.Features.Auth.RegisterPatient;
 
 public sealed class RegisterPatientHandler(TurnosDbContext dbContext, IPasswordHasher passwordHasher)
 {
-    public async Task<ApiResponse<RegisterPatientResponse>> Handle(
+    public async Task<ApiResponse<RegisterPatientResponse>> HandleAsync(
         RegisterPatientRequest request,
         CancellationToken cancellationToken)
     {

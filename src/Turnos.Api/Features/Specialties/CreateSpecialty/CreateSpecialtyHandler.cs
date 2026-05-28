@@ -7,7 +7,7 @@ namespace Turnos.Api.Features.Specialties.CreateSpecialty;
 
 public class CreateSpecialtyHandler(TurnosDbContext dbContext)
 {
-    public async Task<ApiResponse<CreateSpecialtyResponse>> Handle(
+    public async Task<ApiResponse<CreateSpecialtyResponse>> HandleAsync(
         CreateSpecialtyRequest request,
         CancellationToken cancellationToken)
     {

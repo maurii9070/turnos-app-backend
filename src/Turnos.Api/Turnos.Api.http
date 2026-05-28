@@ -1,9 +1,14 @@
 @Api_HostAddress = http://localhost:5092/api
+@contentType = application/json
+
+# ==========================================
+# Autenticación
+# ==========================================
 
 ###
 # Registrar un nuevo paciente (manual)
 POST {{Api_HostAddress}}/auth/register-patient
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
   "dni": "40565353",
@@ -14,9 +19,36 @@ Content-Type: application/json
 }
 
 ###
-# Crear una nueva especialidad
+# @name login
+# Iniciar sesión (devuelve access token en body + refresh token en cookie)
+POST {{Api_HostAddress}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "dni": "40565353",
+  "password": "123123"
+}
+###
+@accessToken = {{login.response.body.data.accessToken}}
+
+###
+# Refrescar access token (lee refresh token de la cookie y rota)
+POST {{Api_HostAddress}}/auth/refresh
+
+###
+# Cerrar sesión (revoca refresh token y borra la cookie)
+POST {{Api_HostAddress}}/auth/logout
+
+# ==========================================
+# Especialidades (requiere SuperAdmin)
+# ==========================================
+
+###
+# @name createSpecialty
+# Crear una nueva especialidad (requiere Bearer token de SuperAdmin)
 POST {{Api_HostAddress}}/specialties
-Content-Type: application/json
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
 
 {
   "name": "Test especialidad",
