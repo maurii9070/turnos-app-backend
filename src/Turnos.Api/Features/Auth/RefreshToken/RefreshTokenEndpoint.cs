@@ -27,22 +27,13 @@ public class RefreshTokenEndpoint : IEndpoint
                 return Results.ValidationProblem(validationResult.ToDictionary());
             }
 
-            var (response, newRefreshToken) = await handler.HandleAsync(request, ct);
+            var response = await handler.HandleAsync(request, ct);
 
-            if (!response.Success || newRefreshToken is null)
+            if (!response.Success)
             {
                 httpContext.Response.Cookies.Delete("refreshToken");
                 return Results.Unauthorized();
             }
-
-            httpContext.Response.Cookies.Delete("refreshToken");
-            httpContext.Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
-            {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict,
-                MaxAge = TimeSpan.FromDays(7),
-                Path = "/"
-            });
 
             return Results.Ok(response);
         })

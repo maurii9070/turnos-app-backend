@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Turnos.Api.Common.Contracts;
+using Turnos.Api.Common.Infrastructure;
 using Turnos.Api.Common.Responses;
 using Turnos.Api.Data;
+using Turnos.Api.Entities;
 
 namespace Turnos.Api.Features.Auth.Login;
 
@@ -33,13 +35,21 @@ public sealed class LoginHandler(TurnosDbContext dbContext, IPasswordHasher pass
         var accessToken = tokenService.GenerateAccessToken(user);
         var refreshTokenValue = tokenService.GenerateRefreshToken();
 
+        var oldTokens = await dbContext.RefreshTokens
+            .Where(rt => rt.UserId == user.Id)
+            .ToListAsync(cancellationToken);
+        if (oldTokens.Count != 0)
+        {
+            dbContext.RefreshTokens.RemoveRange(oldTokens);
+        }
+
         var refreshToken = new Entities.RefreshToken
         {
             Id = Guid.NewGuid(),
             UserId = user.Id,
             Token = refreshTokenValue,
             ExpiresAt = DateTime.UtcNow.AddDays(7),
-            IsUsed = false
+            CreatedAt = DateTime.UtcNow
         };
 
         dbContext.RefreshTokens.Add(refreshToken);

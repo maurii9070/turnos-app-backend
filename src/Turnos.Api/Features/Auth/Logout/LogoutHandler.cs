@@ -11,9 +11,9 @@ public sealed class LogoutHandler(TurnosDbContext dbContext)
         var refreshToken = await dbContext.RefreshTokens
             .FirstOrDefaultAsync(rt => rt.Token == refreshTokenValue, cancellationToken);
 
-        if (refreshToken is not null && refreshToken.RevokedAt is null)
+        if (refreshToken is not null)
         {
-            refreshToken.RevokedAt = DateTime.UtcNow;
+            dbContext.RefreshTokens.Remove(refreshToken);
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
