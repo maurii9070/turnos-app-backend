@@ -1,0 +1,49 @@
+using System.Security.Claims;
+using FluentValidation;
+using Turnos.Api.Common.Contracts;
+using Turnos.Api.Common.Responses;
+
+namespace Turnos.Api.Features.Doctors.Availabilities.CreateAvailability;
+
+public class CreateAvailabilityEndpoint : IEndpoint
+{
+    public static void Map(IEndpointRouteBuilder app)
+    {
+        app.MapPost("api/doctors/{doctorId:guid}/availabilities", async (
+            Guid doctorId,
+            CreateAvailabilityRequest request,
+            ClaimsPrincipal user,
+            CreateAvailabilityHandler handler,
+            IValidator<CreateAvailabilityRequest> validator,
+            CancellationToken ct) =>
+        {
+            var validationResult = await validator.ValidateAsync(request, ct);
+            if (!validationResult.IsValid)
+            {
+                return Results.ValidationProblem(validationResult.ToDictionary());
+            }
+
+            var result = await handler.HandleAsync(doctorId, request, user, ct);
+
+            if (!result.Success)
+            {
+                return result.Message switch
+                {
+                    "No autorizado." => Results.Json(result, statusCode: StatusCodes.Status403Forbidden),
+                    "Doctor no encontrado." => Results.NotFound(result),
+                    _ => Results.Conflict(result)
+                };
+            }
+
+            return Results.Ok(result);
+        })
+        .WithName("CreateDoctorAvailability")
+        .RequireAuthorization()
+        .Produces<ApiResponse<CreateAvailabilityResponse>>(StatusCodes.Status200OK)
+        .Produces<HttpValidationProblemDetails>(StatusCodes.Status400BadRequest)
+        .Produces<ApiResponse<object>>(StatusCodes.Status403Forbidden)
+        .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
+        .Produces<ApiResponse<object>>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status401Unauthorized);
+    }
+}

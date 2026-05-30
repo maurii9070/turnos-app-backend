@@ -14,4 +14,6 @@ public class Doctor
     public User User { get; set; } = null!;
     public Specialty Specialty { get; set; } = null!;
     public ICollection<Appointment> Appointments { get; set; } = [];
+    public ICollection<Schedule> Schedules { get; set; } = [];
+    public ICollection<DoctorAvailability> Availabilities { get; set; } = [];
 }

@@ -18,6 +18,8 @@ public sealed class TurnosDbContext : DbContext
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<AppointmentFile> AppointmentFiles => Set<AppointmentFile>();
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Schedule> Schedules => Set<Schedule>();
+    public DbSet<DoctorAvailability> DoctorAvailabilities => Set<DoctorAvailability>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +33,8 @@ public sealed class TurnosDbContext : DbContext
         ConfigureAppointment(modelBuilder);
         ConfigureAppointmentFile(modelBuilder);
         ConfigurePayment(modelBuilder);
+        ConfigureSchedule(modelBuilder);
+        ConfigureDoctorAvailability(modelBuilder);
     }
 
     private static void ConfigureUser(ModelBuilder modelBuilder)
@@ -235,6 +239,54 @@ public sealed class TurnosDbContext : DbContext
 
             entity.Property(e => e.ReceiptUrl)
                 .HasMaxLength(500);
+        });
+    }
+
+    private static void ConfigureSchedule(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Schedule>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.DayOfWeek)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.Property(e => e.StartTime)
+                .IsRequired();
+
+            entity.Property(e => e.EndTime)
+                .IsRequired();
+
+            entity.HasOne(e => e.Doctor)
+                .WithMany(d => d.Schedules)
+                .HasForeignKey(e => e.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureDoctorAvailability(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<DoctorAvailability>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasIndex(e => new { e.DoctorId, e.Date }).IsUnique();
+
+            entity.Property(e => e.Date)
+                .IsRequired();
+
+            entity.Property(e => e.StartTime)
+                .IsRequired();
+
+            entity.Property(e => e.EndTime)
+                .IsRequired();
+
+            entity.HasOne(e => e.Doctor)
+                .WithMany(d => d.Availabilities)
+                .HasForeignKey(e => e.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

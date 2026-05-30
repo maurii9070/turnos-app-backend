@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Turnos.Api.Data;
@@ -11,9 +12,11 @@ using Turnos.Api.Data;
 namespace Turnos.Api.Migrations
 {
     [DbContext(typeof(TurnosDbContext))]
-    partial class TurnosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260529223334_AddScheduleEntity")]
+    partial class AddScheduleEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,55 +178,6 @@ namespace Turnos.Api.Migrations
                         .HasDatabaseName("ix_doctors_user_id");
 
                     b.ToTable("doctors", (string)null);
-                });
-
-            modelBuilder.Entity("Turnos.Api.Entities.DoctorAvailability", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
-                        .HasColumnName("date");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("doctor_id");
-
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time without time zone")
-                        .HasColumnName("end_time");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_available");
-
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time without time zone")
-                        .HasColumnName("start_time");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id")
-                        .HasName("pk_doctor_availabilities");
-
-                    b.HasIndex("DoctorId", "Date")
-                        .IsUnique()
-                        .HasDatabaseName("ix_doctor_availabilities_doctor_id_date");
-
-                    b.ToTable("doctor_availabilities", (string)null);
                 });
 
             modelBuilder.Entity("Turnos.Api.Entities.Patient", b =>
@@ -583,18 +537,6 @@ namespace Turnos.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Turnos.Api.Entities.DoctorAvailability", b =>
-                {
-                    b.HasOne("Turnos.Api.Entities.Doctor", "Doctor")
-                        .WithMany("Availabilities")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_doctor_availabilities_doctors_doctor_id");
-
-                    b.Navigation("Doctor");
-                });
-
             modelBuilder.Entity("Turnos.Api.Entities.Patient", b =>
                 {
                     b.HasOne("Turnos.Api.Entities.User", "User")
@@ -664,8 +606,6 @@ namespace Turnos.Api.Migrations
             modelBuilder.Entity("Turnos.Api.Entities.Doctor", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("Availabilities");
 
                     b.Navigation("Schedules");
                 });

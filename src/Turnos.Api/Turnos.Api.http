@@ -25,7 +25,7 @@ POST {{Api_HostAddress}}/auth/login
 Content-Type: {{contentType}}
 
 {
-  "dni": "40565353",
+  "dni": "40565354",
   "password": "123123"
 }
 ###
@@ -51,7 +51,7 @@ Content-Type: {{contentType}}
 Authorization: Bearer {{accessToken}}
 
 {
-  "name": "Test especialidad",
+  "name": "Test especialidad p/doctor",
   "description": "Descripción de la especialidad de prueba"
 }
 
@@ -81,6 +81,171 @@ Authorization: Bearer {{accessToken}}
 ###
 # Eliminar especialidad (soft-delete, requiere SuperAdmin)
 DELETE {{Api_HostAddress}}/specialties/{{createSpecialty.response.body.data.id}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+# ==========================================
+# Doctores (algunos públicos, otros SuperAdmin)
+# ==========================================
+
+###  @name createDoctor
+# Crear un doctor (requiere SuperAdmin)
+POST {{Api_HostAddress}}/doctors
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "dni": "40565355",
+  "firstName": "Juan",
+  "lastName": "Pérez",
+  "password": "123123",
+  "specialtyId": "{{createSpecialty.response.body.data.id}}",
+  "licenseNumber": "MN-12345",
+  "consultationPrice": 5000.00,
+  "email": "juan.perez@example.com",
+  "phone": "1144445555"
+}
+
+###  @name createDoctor2
+# Crear otro doctor (para listar y filtrar)
+POST {{Api_HostAddress}}/doctors
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "dni": "30666222",
+  "firstName": "María",
+  "lastName": "García",
+  "password": "123123",
+  "specialtyId": "{{createSpecialty.response.body.data.id}}",
+  "licenseNumber": "MN-67890",
+  "consultationPrice": 6000.00
+}
+
+###  @name createDoctor3
+# Crear doctor sin token (debería dar 401)
+POST {{Api_HostAddress}}/doctors
+Content-Type: {{contentType}}
+
+{
+  "dni": "30777333",
+  "firstName": "Test",
+  "lastName": "Doctor",
+  "password": "123456",
+  "specialtyId": "{{createSpecialty.response.body.data.id}}",
+  "licenseNumber": "MN-99999",
+  "consultationPrice": 4000.00
+}
+
+###  @name listDoctors
+# Listar todos los doctores activos (público)
+GET {{Api_HostAddress}}/doctors
+
+###  @name listDoctorsFiltered
+# Listar doctores filtrados por especialidad
+GET {{Api_HostAddress}}/doctors?specialtyId={{createSpecialty.response.body.data.id}}
+
+###  @name getDoctor
+# Obtener doctor por ID con especialidad y horarios (público)
+GET {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}
+
+###  @name updateDoctor
+# Actualizar doctor (requiere SuperAdmin)
+PUT {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "specialtyId": "{{createSpecialty.response.body.data.id}}",
+  "licenseNumber": "MN-54321",
+  "consultationPrice": 5500.00
+}
+
+###  @name deactivateDoctor
+# Desactivar doctor (soft-delete, SuperAdmin)
+DELETE {{Api_HostAddress}}/doctors/{{createDoctor2.response.body.data.doctorId}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+# ==========================================
+# Horarios semanales del doctor (Schedule)
+# ==========================================
+
+###  @name getSchedules
+# Obtener horarios semanales del doctor (público)
+GET {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/schedules
+
+###  @name setSchedules
+# Definir horarios semanales (SuperAdmin o doctor propietario)
+PUT {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/schedules
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "schedules": [
+    { "dayOfWeek": "Monday",    "startTime": "09:00", "endTime": "13:00" },
+    { "dayOfWeek": "Monday",    "startTime": "15:00", "endTime": "18:00" },
+    { "dayOfWeek": "Tuesday",   "startTime": "09:00", "endTime": "17:00" },
+    { "dayOfWeek": "Wednesday", "startTime": "09:00", "endTime": "17:00" },
+    { "dayOfWeek": "Thursday",  "startTime": "09:00", "endTime": "17:00" },
+    { "dayOfWeek": "Friday",    "startTime": "09:00", "endTime": "13:00" }
+  ]
+}
+
+#
+
+# ==========================================
+# Disponibilidades por fecha (DoctorAvailability)
+# ==========================================
+
+###  @name listAvailabilities
+# Listar disponibilidades por fecha (público, con filtro opcional de rango)
+GET {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/availabilities?from=2026-06-01&to=2026-06-30
+
+###  @name createAvailability
+# Agregar día extra disponible (SuperAdmin o doctor propietario)
+POST {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/availabilities
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "date": "2026-06-15",
+  "startTime": "10:00",
+  "endTime": "14:00",
+  "isAvailable": true
+}
+
+###  @name createBlockedDay
+# Bloquear un día concreto (SuperAdmin o doctor propietario)
+POST {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/availabilities
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "date": "2026-06-17",
+  "startTime": "09:00",
+  "endTime": "17:00",
+  "isAvailable": false
+}
+
+###  @name updateAvailability
+# Modificar una disponibilidad existente
+PUT {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/availabilities/{{createAvailability.response.body.data.id}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "date": "2026-06-15",
+  "startTime": "11:00",
+  "endTime": "15:00",
+  "isAvailable": true
+}
+
+###  @name deleteAvailability
+# Eliminar una disponibilidad (vuelve al schedule semanal)
+DELETE {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/availabilities/{{createAvailability.response.body.data.id}}
 Authorization: Bearer {{accessToken}}
 
 ###
