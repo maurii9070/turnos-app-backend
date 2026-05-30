@@ -25,7 +25,7 @@ POST {{Api_HostAddress}}/auth/login
 Content-Type: {{contentType}}
 
 {
-  "dni": "40565354",
+  "dni": "40565355",
   "password": "123123"
 }
 ###
@@ -247,5 +247,83 @@ Authorization: Bearer {{accessToken}}
 # Eliminar una disponibilidad (vuelve al schedule semanal)
 DELETE {{Api_HostAddress}}/doctors/{{createDoctor.response.body.data.doctorId}}/availabilities/{{createAvailability.response.body.data.id}}
 Authorization: Bearer {{accessToken}}
+
+###
+
+# ==========================================
+# Turnos (Appointments) — requiere token de Patient salvo que se indique
+# ==========================================
+
+###
+#  @name loginAsPatient
+# Login como paciente (40565353) para crear/cancelar turnos
+POST {{Api_HostAddress}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "dni": "40565353",
+  "password": "123123"
+}
+###
+@patientToken = {{loginAsPatient.response.body.data.accessToken}}
+
+###  @name createAppointment
+# Crear un turno (Patient) — usa patientToken
+POST {{Api_HostAddress}}/appointments
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "doctorId": "{{createDoctor.response.body.data.doctorId}}",
+  "date": "2026-06-16",
+  "startTime": "10:00",
+  "notes": "Consulta por dolor de espalda"
+}
+
+###  @name createAppointment2
+# Crear otro turno para listar varios
+POST {{Api_HostAddress}}/appointments
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "doctorId": "{{createDoctor.response.body.data.doctorId}}",
+  "date": "2026-06-18",
+  "startTime": "11:00",
+  "notes": "Control de rutina"
+}
+
+###  @name listMyAppointments
+# Listar mis turnos (Patient o Doctor)
+GET {{Api_HostAddress}}/appointments/me
+Authorization: Bearer {{patientToken}}
+
+###  @name getAppointment
+# Obtener detalle de un turno
+GET {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}
+Authorization: Bearer {{patientToken}}
+
+###  @name cancelAppointment
+# Cancelar un turno (solo PendingPayment)
+PUT {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/cancel
+Authorization: Bearer {{patientToken}}
+
+###  @name confirmAppointment
+# Confirmar un turno (Admin/SuperAdmin) — usa accessToken (SuperAdmin)
+PUT {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/confirm
+Authorization: Bearer {{accessToken}}
+
+###  @name listAppointments
+# Listar todos los turnos (Admin/SuperAdmin) — filtro opcional por status
+GET {{Api_HostAddress}}/appointments?status=PendingReview
+Authorization: Bearer {{accessToken}}
+
+###  @name completeAppointment
+# Completar un turno (requiere token de Doctor logueado)
+# Primero logueate como el doctor:
+#   POST {{Api_HostAddress}}/auth/login {"dni": "40565355", "password": "123123"}
+# Luego usa ese token acá
+PUT {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/complete
+Authorization: Bearer <doctorAccessToken>
 
 ###

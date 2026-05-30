@@ -1,3 +1,10 @@
+using Turnos.Api.Features.Appointments.CancelAppointment;
+using Turnos.Api.Features.Appointments.CompleteAppointment;
+using Turnos.Api.Features.Appointments.ConfirmAppointment;
+using Turnos.Api.Features.Appointments.CreateAppointment;
+using Turnos.Api.Features.Appointments.GetAppointment;
+using Turnos.Api.Features.Appointments.ListAppointments;
+using Turnos.Api.Features.Appointments.ListMyAppointments;
 using Turnos.Api.Features.Auth.Login;
 using Turnos.Api.Features.Auth.Logout;
 using Turnos.Api.Features.Auth.RefreshToken;
@@ -48,6 +55,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CreateAvailabilityHandler>();
         services.AddScoped<UpdateAvailabilityHandler>();
         services.AddScoped<DeleteAvailabilityHandler>();
+
+        services.AddScoped<CreateAppointmentHandler>();
+        services.AddScoped<ListMyAppointmentsHandler>();
+        services.AddScoped<GetAppointmentHandler>();
+        services.AddScoped<CancelAppointmentHandler>();
+        services.AddScoped<CompleteAppointmentHandler>();
+        services.AddScoped<ConfirmAppointmentHandler>();
+        services.AddScoped<ListAppointmentsHandler>();
 
         return services;
     }
