@@ -60,6 +60,7 @@ src/Turnos.Api/
     Responses/     ← ApiResponse<T>
     Security/       ← Auth implementations (BCryptPasswordHasher, JwtTokenService, JwtSettings)
     Extensions/     ← Extension methods (AuthExtensions, DatabaseExtensions, etc.)
+    Helpers/         ← Reusable utilities (DoctorAuthorization)
   Data/            ← TurnosDbContext
   Entities/        ← Domain entities + Enums/
   Features/        ← Vertical slices (Endpoint, Handler, Request, Response, Validator)
@@ -85,10 +86,11 @@ All service configuration uses extension methods in `Common/Extensions/`:
 
 - `appsettings.Development.json` contains `ConnectionStrings:DefaultConnection` pointing to local PostgreSQL.
 - OpenAPI mapped **only in Development** (`app.MapOpenApi()`).
-- `Turnos.Api.http` still references `/weatherforecast/` (template leftover, safe to ignore or delete).
+- `Turnos.Api.http` contains test requests for Auth, Specialties, Doctors, Schedules, and Availabilities.
 
 ## Important Constraints
 
 - **Auth is manual** — no ASP.NET Identity. `UserRole` enum: `Patient`, `Doctor`, `Admin`, `SuperAdmin`.
 - **No tracking by default** is recommended for read queries (`AsNoTracking()`). Writes require explicit `Update()` or `.AsTracking()`.
 - All user-facing messages are in **Spanish**, code in **English**.
+- **Authorization**: endpoints protegidos usan `.RequireAuthorization()` (cualquier autenticado). Cuando el endpoint debe restringirse a SuperAdmin o al doctor propietario del recurso, se usa `DoctorAuthorization.CanManageDoctorAsync()` en el handler — no hay custom policies.
