@@ -25,7 +25,7 @@ POST {{Api_HostAddress}}/auth/login
 Content-Type: {{contentType}}
 
 {
-  "dni": "40565355",
+  "dni": "40565353",
   "password": "123123"
 }
 ###
@@ -325,5 +325,41 @@ Authorization: Bearer {{accessToken}}
 # Luego usa ese token acá
 PUT {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/complete
 Authorization: Bearer <doctorAccessToken>
+
+###
+
+# ==========================================
+# Perfil de Usuario
+# ==========================================
+
+###  @name getCurrentUser
+# Obtener perfil del usuario autenticado (SuperAdmin, Doctor o Patient)
+GET {{Api_HostAddress}}/users/me
+Authorization: Bearer {{accessToken}}
+
+###  @name updateProfile
+# Actualizar nombre, email, teléfono y fecha de nacimiento (Patient)
+PUT {{Api_HostAddress}}/users/me
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "firstName": "Mauricio",
+  "lastName": "Velazquez",
+  "email": "mauricio@example.com",
+  "phone": "1144445555",
+  "dateOfBirth": "1996-10-29"
+}
+
+###  @name changePassword
+# Cambiar contraseña (requiere contraseña actual)
+PUT {{Api_HostAddress}}/users/me/password
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "currentPassword": "123123",
+  "newPassword": "newPass456"
+}
 
 ###
