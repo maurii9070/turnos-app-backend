@@ -274,9 +274,9 @@ Content-Type: {{contentType}}
 Authorization: Bearer {{patientToken}}
 
 {
-  "doctorId": "{{createDoctor.response.body.data.doctorId}}",
+  "doctorId": "58dd9cc8-1562-477b-9b08-38290b3e40c6",
   "date": "2026-06-16",
-  "startTime": "10:00",
+  "startTime": "09:00",
   "notes": "Consulta por dolor de espalda"
 }
 
@@ -325,6 +325,126 @@ Authorization: Bearer {{accessToken}}
 # Luego usa ese token acá
 PUT {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/complete
 Authorization: Bearer <doctorAccessToken>
+
+###
+
+# ==========================================
+# Pagos (Payments)
+# ==========================================
+
+###  @name createPaymentCash
+# Crear pago en efectivo para un turno (Patient dueño del turno)
+# → Appointment sigue en PendingPayment (pago presencial)
+POST {{Api_HostAddress}}/appointments/370c28fd-3f1c-4996-a71c-aed18163f223/payment
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "method": "Cash",
+  "receiptUrl": null
+}
+
+###  @name createPaymentTransfer
+# Crear pago por transferencia con comprobante (Patient)
+# → Appointment pasa a PendingReview (admin/doctor debe aprobar)
+POST {{Api_HostAddress}}/appointments/370c28fd-3f1c-4996-a71c-aed18163f223/payment
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "method": "Transfer",
+  "receiptUrl": "https://example.com/comprobantes/transfer-12345.jpg"
+}
+
+###  @name createPaymentMercadoPago
+# Crear pago con MercadoPago (debe fallar con 400 — se gestiona en otro endpoint)
+POST {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/payment
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "method": "MercadoPago",
+  "receiptUrl": null
+}
+
+###  @name createPaymentIdempotent
+# Reintentar crear pago cuando ya existe uno Pending (idempotencia)
+# → devuelve 200 con el mismo Payment (no error)
+POST {{Api_HostAddress}}/appointments/{{createAppointment2.response.body.data.id}}/payment
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "method": "Transfer",
+  "receiptUrl": "https://example.com/comprobantes/transfer-retry.jpg"
+}
+
+###  @name createPaymentInvalidReceipt
+# Crear pago con ReceiptUrl inválida (debe fallar con 400)
+POST {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/payment
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "method": "Transfer",
+  "receiptUrl": "not-a-valid-url"
+}
+
+###  
+# @name loginAsAdmin
+# Login como SuperAdmin (DNI 40565353 ya logueado arriba, este es solo un placeholder
+# si necesitás un token fresco de admin)
+POST {{Api_HostAddress}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "dni": "40565354",
+  "password": "123123"
+}
+###
+@adminToken = {{loginAsAdmin.response.body.data.accessToken}}
+
+###  @name approvePayment
+# Aprobar un pago (Admin/SuperAdmin o Doctor dueño de la cita)
+# → PaidAt se setea a UtcNow; la cita sigue en PendingReview hasta ConfirmAppointment
+PUT {{Api_HostAddress}}/payments/e29ed4d0-64d6-40aa-bfab-5cc58d6579a8
+Content-Type: {{contentType}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "Approved"
+}
+
+###  @name rejectPayment
+# Rechazar un pago (Admin/SuperAdmin o Doctor dueño de la cita)
+PUT {{Api_HostAddress}}/payments/2c884c85-774c-4313-91df-7393a52e15ff
+Content-Type: {{contentType}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "Rejected"
+}
+
+###  @name updatePaymentInvalidStatus
+# Intentar actualizar con status Pending (debe fallar con 400)
+PUT {{Api_HostAddress}}/payments/370c28fd-3f1c-4996-a71c-aed18163f223
+Content-Type: {{contentType}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "Approved"
+}
+
+###  @name createPaymentAfterReject
+# Crear pago nuevo después de un rechazo (reemplaza el Rejected)
+POST {{Api_HostAddress}}/appointments/2c884c85-774c-4313-91df-7393a52e15ff/payment
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "method": "Transfer",
+  "receiptUrl": "https://example.com/comprobantes/transfer-after-reject.jpg"
+}
 
 ###
 

@@ -25,6 +25,8 @@ using Turnos.Api.Features.Specialties.DeleteSpecialty;
 using Turnos.Api.Features.Specialties.GetSpecialties;
 using Turnos.Api.Features.Specialties.GetSpecialtyById;
 using Turnos.Api.Features.Specialties.UpdateSpecialty;
+using Turnos.Api.Features.Payments.CreatePayment;
+using Turnos.Api.Features.Payments.UpdatePaymentStatus;
 using Turnos.Api.Features.Users.ChangePassword;
 using Turnos.Api.Features.Users.GetCurrentUser;
 using Turnos.Api.Features.Users.UpdateProfile;
@@ -70,6 +72,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetCurrentUserHandler>();
         services.AddScoped<UpdateProfileHandler>();
         services.AddScoped<ChangePasswordHandler>();
+
+        services.AddScoped<CreatePaymentHandler>();
+        services.AddScoped<UpdatePaymentStatusHandler>();
 
         return services;
     }

@@ -94,3 +94,7 @@ All service configuration uses extension methods in `Common/Extensions/`:
 - **No tracking by default** is recommended for read queries (`AsNoTracking()`). Writes require explicit `Update()` or `.AsTracking()`.
 - All user-facing messages are in **Spanish**, code in **English**.
 - **Authorization**: endpoints protegidos usan `.RequireAuthorization()` (cualquier autenticado). Cuando el endpoint debe restringirse a SuperAdmin o al doctor propietario del recurso, se usa `DoctorAuthorization.CanManageDoctorAsync()` en el handler — no hay custom policies.
+
+## Frontend Integration
+
+- **Mobile-first design**: todas las páginas del frontend deben ser responsive y funcionar primero en dispositivos móviles.
