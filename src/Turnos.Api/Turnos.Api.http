@@ -318,6 +318,11 @@ Authorization: Bearer {{accessToken}}
 GET {{Api_HostAddress}}/appointments?status=PendingReview
 Authorization: Bearer {{accessToken}}
 
+###  @name getDoctorAppointments
+# Obtener turnos ocupados de un doctor en una fecha (cualquier autenticado)
+GET {{Api_HostAddress}}/doctors/58dd9cc8-1562-477b-9b08-38290b3e40c6/appointments?date=2026-06-16
+Authorization: Bearer {{patientToken}}
+
 ###  @name completeAppointment
 # Completar un turno (requiere token de Doctor logueado)
 # Primero logueate como el doctor:

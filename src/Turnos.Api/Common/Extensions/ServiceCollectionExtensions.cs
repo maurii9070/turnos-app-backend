@@ -13,6 +13,7 @@ using Turnos.Api.Features.Doctors.Availabilities.CreateAvailability;
 using Turnos.Api.Features.Doctors.Availabilities.DeleteAvailability;
 using Turnos.Api.Features.Doctors.Availabilities.ListAvailabilities;
 using Turnos.Api.Features.Doctors.Availabilities.UpdateAvailability;
+using Turnos.Api.Features.Doctors.Appointments.GetDoctorAppointments;
 using Turnos.Api.Features.Doctors.CreateDoctor;
 using Turnos.Api.Features.Doctors.DeactivateDoctor;
 using Turnos.Api.Features.Doctors.GetDoctor;
@@ -54,6 +55,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UpdateDoctorHandler>();
         services.AddScoped<DeactivateDoctorHandler>();
 
+        services.AddScoped<GetDoctorAppointmentsHandler>();
         services.AddScoped<GetSchedulesHandler>();
         services.AddScoped<SetSchedulesHandler>();
         services.AddScoped<ListAvailabilitiesHandler>();
