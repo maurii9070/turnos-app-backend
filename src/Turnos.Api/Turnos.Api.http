@@ -25,7 +25,7 @@ POST {{Api_HostAddress}}/auth/login
 Content-Type: {{contentType}}
 
 {
-  "dni": "40565353",
+  "dni": "40565355",
   "password": "123123"
 }
 ###
@@ -300,7 +300,7 @@ Authorization: Bearer {{patientToken}}
 
 ###  @name getAppointment
 # Obtener detalle de un turno
-GET {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}
+GET {{Api_HostAddress}}/appointments/17e7617d-5b8b-412e-a022-a25388ac5998
 Authorization: Bearer {{patientToken}}
 
 ###  @name cancelAppointment
@@ -449,6 +449,86 @@ Authorization: Bearer {{patientToken}}
 {
   "method": "Transfer",
   "receiptUrl": "https://example.com/comprobantes/transfer-after-reject.jpg"
+}
+
+###
+
+# ==========================================
+# Archivos de Turno (AppointmentFiles)
+# ==========================================
+
+###  @name uploadPatientReceipt
+# Subir comprobante de pago como Patient (dueño del turno)
+# → Appointment pasa de PendingPayment a PendingReview + actualiza Payment.ReceiptUrl
+# Nota: Reemplazar {appointmentId} con el ID del turno en PendingPayment
+POST {{Api_HostAddress}}/appointments/17e7617d-5b8b-412e-a022-a25388ac5998/files
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "fileName": "comprobante_falso.png",
+  "fileType": "image/png",
+  "filePathOrUrl": "https://kupatmndlliglhoyyvip.supabase.co/storage/v1/object/public/appointment-files/patient-file/comprobante_falso.png"
+}
+
+###  @name uploadPatientReceiptPdf
+# Subir comprobante en PDF como Patient
+POST {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/files
+Content-Type: {{contentType}}
+Authorization: Bearer {{{{accessToken}}}}
+
+{
+  "fileName": "comprobante_transferencia.pdf",
+  "fileType": "application/pdf",
+  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/usuario-123/transferencia.pdf"
+}
+
+###  @name uploadDoctorDocument
+# Subir archivo médico como Doctor (no cambia estado del turno)
+# Nota: Primero logueate como el doctor del turno y usa su token acá
+POST {{Api_HostAddress}}/appointments/17e7617d-5b8b-412e-a022-a25388ac5998/files
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+{
+  "fileName": "resultado_estudio.jpg",
+  "fileType": "image/jpeg",
+  "filePathOrUrl": "https://kupatmndlliglhoyyvip.supabase.co/storage/v1/object/public/appointment-files/doctor-file/archivo-medico-falso.jpg"
+}
+
+###  @name uploadFileInvalidUrl
+# Subir archivo con URL inválida (debe fallar con 400)
+POST {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/files
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "fileName": "comprobante.jpg",
+  "fileType": "image/jpeg",
+  "filePathOrUrl": "not-a-valid-url"
+}
+
+###  @name uploadFileNoAuth
+# Subir archivo sin token (debe fallar con 401)
+POST {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/files
+Content-Type: {{contentType}}
+
+{
+  "fileName": "comprobante.jpg",
+  "fileType": "image/jpeg",
+  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/test.jpg"
+}
+
+###  @name uploadFileNotFound
+# Subir archivo a un turno inexistente (debe fallar con 404)
+POST {{Api_HostAddress}}/appointments/00000000-0000-0000-0000-000000000000/files
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "fileName": "comprobante.jpg",
+  "fileType": "image/jpeg",
+  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/test.jpg"
 }
 
 ###

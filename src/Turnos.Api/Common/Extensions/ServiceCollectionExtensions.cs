@@ -1,3 +1,4 @@
+using Turnos.Api.Features.AppointmentFiles.UploadAppointmentFile;
 using Turnos.Api.Features.Appointments.CancelAppointment;
 using Turnos.Api.Features.Appointments.CompleteAppointment;
 using Turnos.Api.Features.Appointments.ConfirmAppointment;
@@ -77,6 +78,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<CreatePaymentHandler>();
         services.AddScoped<UpdatePaymentStatusHandler>();
+
+        services.AddScoped<UploadAppointmentFileHandler>();
 
         return services;
     }
