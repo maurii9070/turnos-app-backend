@@ -17,7 +17,8 @@ public static class AppointmentAuthorization
         if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
             return false;
 
-        if (user.IsInRole(nameof(UserRole.SuperAdmin)))
+        if (user.IsInRole(nameof(UserRole.SuperAdmin)) ||
+            user.IsInRole(nameof(UserRole.Admin)))
             return true;
 
         return await dbContext.Appointments.AnyAsync(
