@@ -79,17 +79,13 @@ public class CreatePaymentHandler(TurnosDbContext dbContext)
             UpdatedAt = DateTime.UtcNow
         };
 
-        appointment.Status = request.Method == PaymentMethod.Cash
-            ? AppointmentStatus.PendingPayment
-            : AppointmentStatus.PendingReview;
+        appointment.Status = AppointmentStatus.PendingPayment;
         appointment.UpdatedAt = DateTime.UtcNow;
 
         dbContext.Payments.Add(payment);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var message = request.Method == PaymentMethod.Cash
-            ? "Pago en efectivo registrado. Se confirmará al momento de la consulta."
-            : "Pago registrado. Queda pendiente de revisión por el administrador.";
+        var message = "Pago registrado. Debe subir el comprobante para continuar con la revisión.";
 
         var response = new CreatePaymentResponse(
             payment.Id,
