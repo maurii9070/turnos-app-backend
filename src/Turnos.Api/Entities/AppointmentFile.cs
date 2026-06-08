@@ -1,3 +1,5 @@
+using Turnos.Api.Entities.Enums;
+
 namespace Turnos.Api.Entities;
 
 public class AppointmentFile
@@ -7,6 +9,7 @@ public class AppointmentFile
     public string FilePathOrUrl { get; set; } = null!;
     public string FileName { get; set; } = null!;
     public string FileType { get; set; } = null!;
+    public AppointmentFileCategory Category { get; set; }
     public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
     public Appointment Appointment { get; set; } = null!;

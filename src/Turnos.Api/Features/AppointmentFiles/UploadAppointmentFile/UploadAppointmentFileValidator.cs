@@ -14,6 +14,9 @@ public class UploadAppointmentFileValidator : AbstractValidator<UploadAppointmen
             .NotEmpty().WithMessage("El tipo de archivo es obligatorio.")
             .MaximumLength(50).WithMessage("El tipo de archivo no puede superar los 50 caracteres.");
 
+        RuleFor(x => x.Category)
+            .IsInEnum().WithMessage("La categoría del archivo no es válida. Valores permitidos: Medical, Receipt.");
+
         RuleFor(x => x.FilePathOrUrl)
             .NotEmpty().WithMessage("La URL del archivo es obligatoria.")
             .MaximumLength(500).WithMessage("La URL del archivo no puede superar los 500 caracteres.")

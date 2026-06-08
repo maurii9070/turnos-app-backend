@@ -213,6 +213,11 @@ public sealed class TurnosDbContext : DbContext
             entity.Property(e => e.FileType)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            entity.Property(e => e.Category)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .IsRequired();
         });
     }
 

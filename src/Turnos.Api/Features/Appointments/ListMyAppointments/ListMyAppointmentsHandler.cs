@@ -40,6 +40,7 @@ public class ListMyAppointmentsHandler(TurnosDbContext dbContext)
                 .ThenInclude(d => d.Specialty)
             .Include(a => a.Patient)
                 .ThenInclude(p => p.User)
+            .Include(a => a.Payment)
             .OrderByDescending(a => a.Date)
             .ThenByDescending(a => a.StartTime)
             .Select(a => new ListMyAppointmentsResponse(
@@ -54,7 +55,8 @@ public class ListMyAppointmentsHandler(TurnosDbContext dbContext)
                 a.Date.ToString("yyyy-MM-dd"),
                 a.StartTime.ToString("HH:mm"),
                 a.Status.ToString(),
-                a.Notes))
+                a.Notes,
+                a.Payment != null ? a.Payment.Method.ToString() : null))
             .ToListAsync(cancellationToken);
 
         return ApiResponse<List<ListMyAppointmentsResponse>>.Ok(appointments);

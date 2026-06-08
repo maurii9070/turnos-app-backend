@@ -485,7 +485,8 @@ Authorization: Bearer {{patientToken}}
 {
   "fileName": "comprobante_falso.png",
   "fileType": "image/png",
-  "filePathOrUrl": "https://kupatmndlliglhoyyvip.supabase.co/storage/v1/object/public/appointment-files/patient-file/comprobante_falso.png"
+  "filePathOrUrl": "https://kupatmndlliglhoyyvip.supabase.co/storage/v1/object/public/appointment-files/patient-file/comprobante_falso.png",
+  "category": "Receipt"
 }
 
 ###  @name uploadPatientReceiptPdf
@@ -497,7 +498,8 @@ Authorization: Bearer {{{{accessToken}}}}
 {
   "fileName": "comprobante_transferencia.pdf",
   "fileType": "application/pdf",
-  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/usuario-123/transferencia.pdf"
+  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/usuario-123/transferencia.pdf",
+  "category": "Receipt"
 }
 
 ###  @name uploadDoctorDocument
@@ -510,7 +512,8 @@ Authorization: Bearer {{accessToken}}
 {
   "fileName": "resultado_estudio.jpg",
   "fileType": "image/jpeg",
-  "filePathOrUrl": "https://kupatmndlliglhoyyvip.supabase.co/storage/v1/object/public/appointment-files/doctor-file/archivo-medico-falso.jpg"
+  "filePathOrUrl": "https://kupatmndlliglhoyyvip.supabase.co/storage/v1/object/public/appointment-files/doctor-file/archivo-medico-falso.jpg",
+  "category": "Medical"
 }
 
 ###  @name uploadFileInvalidUrl
@@ -522,7 +525,8 @@ Authorization: Bearer {{patientToken}}
 {
   "fileName": "comprobante.jpg",
   "fileType": "image/jpeg",
-  "filePathOrUrl": "not-a-valid-url"
+  "filePathOrUrl": "not-a-valid-url",
+  "category": "Receipt"
 }
 
 ###  @name uploadFileNoAuth
@@ -533,7 +537,8 @@ Content-Type: {{contentType}}
 {
   "fileName": "comprobante.jpg",
   "fileType": "image/jpeg",
-  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/test.jpg"
+  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/test.jpg",
+  "category": "Receipt"
 }
 
 ###  @name uploadFileNotFound
@@ -545,7 +550,8 @@ Authorization: Bearer {{patientToken}}
 {
   "fileName": "comprobante.jpg",
   "fileType": "image/jpeg",
-  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/test.jpg"
+  "filePathOrUrl": "https://xxx.supabase.co/storage/v1/object/public/comprobantes/test.jpg",
+  "category": "Receipt"
 }
 
 ###

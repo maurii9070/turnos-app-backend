@@ -6,5 +6,6 @@ public record UploadAppointmentFileResponse(
     string FileName,
     string FileType,
     string FilePathOrUrl,
+    string Category,
     DateTime UploadedAt
 );

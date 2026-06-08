@@ -44,6 +44,8 @@ public class UploadAppointmentFileHandler(TurnosDbContext dbContext)
             return ApiResponse<UploadAppointmentFileResponse>.Fail("No tiene permiso para subir archivos a este turno.");
         }
 
+        var category = isPatient ? AppointmentFileCategory.Receipt : AppointmentFileCategory.Medical;
+
         var appointmentFile = new AppointmentFile
         {
             Id = Guid.NewGuid(),
@@ -51,6 +53,7 @@ public class UploadAppointmentFileHandler(TurnosDbContext dbContext)
             FileName = request.FileName.Trim(),
             FileType = request.FileType.Trim(),
             FilePathOrUrl = request.FilePathOrUrl.Trim(),
+            Category = category,
             UploadedAt = DateTime.UtcNow
         };
 
@@ -79,6 +82,7 @@ public class UploadAppointmentFileHandler(TurnosDbContext dbContext)
             appointmentFile.FileName,
             appointmentFile.FileType,
             appointmentFile.FilePathOrUrl,
+            appointmentFile.Category.ToString(),
             appointmentFile.UploadedAt);
 
         var message = transitionedToReview

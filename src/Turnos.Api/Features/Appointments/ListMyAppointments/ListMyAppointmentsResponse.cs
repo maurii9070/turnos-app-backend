@@ -12,5 +12,6 @@ public record ListMyAppointmentsResponse(
     string Date,
     string StartTime,
     string Status,
-    string? Notes
+    string? Notes,
+    string? PaymentMethod
 );
