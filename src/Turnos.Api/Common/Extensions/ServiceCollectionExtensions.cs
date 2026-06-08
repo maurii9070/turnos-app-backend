@@ -4,6 +4,7 @@ using Turnos.Api.Features.Appointments.CompleteAppointment;
 using Turnos.Api.Features.Appointments.ConfirmAppointment;
 using Turnos.Api.Features.Appointments.CreateAppointment;
 using Turnos.Api.Features.Appointments.GetAppointment;
+using Turnos.Api.Features.Appointments.ListDoctorAppointments;
 using Turnos.Api.Features.Appointments.ListAppointments;
 using Turnos.Api.Features.Appointments.ListMyAppointments;
 using Turnos.Api.Features.Auth.Login;
@@ -66,6 +67,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<CreateAppointmentHandler>();
         services.AddScoped<ListMyAppointmentsHandler>();
+        services.AddScoped<ListDoctorAppointmentsHandler>();
         services.AddScoped<GetAppointmentHandler>();
         services.AddScoped<CancelAppointmentHandler>();
         services.AddScoped<CompleteAppointmentHandler>();

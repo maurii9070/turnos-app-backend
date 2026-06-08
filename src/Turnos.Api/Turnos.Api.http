@@ -298,6 +298,23 @@ Authorization: Bearer {{patientToken}}
 GET {{Api_HostAddress}}/appointments/me
 Authorization: Bearer {{patientToken}}
 
+#  @name loginAsDoctor
+### Login como Doctor para ver su listado dedicado
+POST {{Api_HostAddress}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "dni": "40565355",
+  "password": "123123"
+}
+###
+@doctorToken = {{loginAsDoctor.response.body.data.accessToken}}
+
+###  @name listDoctorAppointments
+# Listar turnos del doctor (solo Confirmed y Completed)
+GET {{Api_HostAddress}}/doctors/me/appointments
+Authorization: Bearer {{doctorToken}}
+
 ###  @name getAppointment
 # Obtener detalle de un turno
 GET {{Api_HostAddress}}/appointments/17e7617d-5b8b-412e-a022-a25388ac5998
