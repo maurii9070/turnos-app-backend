@@ -31,6 +31,7 @@ using Turnos.Api.Features.Specialties.UpdateSpecialty;
 using Turnos.Api.Features.Patients.CreatePatient;
 using Turnos.Api.Features.Patients.GetPatientByDni;
 using Turnos.Api.Features.Patients.ListPatients;
+using Turnos.Api.Features.Admins.CreateAdmin;
 using Turnos.Api.Features.Payments.CreatePayment;
 using Turnos.Api.Features.Payments.UpdatePaymentStatus;
 using Turnos.Api.Features.Users.ChangePassword;
@@ -85,6 +86,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UpdatePaymentStatusHandler>();
 
         services.AddScoped<UploadAppointmentFileHandler>();
+
+        services.AddScoped<CreateAdminHandler>();
 
         services.AddScoped<CreatePatientHandler>();
         services.AddScoped<GetPatientByDniHandler>();
