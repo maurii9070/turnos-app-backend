@@ -20,12 +20,7 @@ public class GetAppointmentHandler(TurnosDbContext dbContext)
 
         var appointment = await dbContext.Appointments
             .AsNoTracking()
-            .Include(a => a.Patient)
-                .ThenInclude(p => p.User)
-            .Include(a => a.Doctor)
-                .ThenInclude(d => d.User)
-            .Include(a => a.Doctor)
-                .ThenInclude(d => d.Specialty)
+            .AsSplitQuery()
             .Where(a => a.Id == id && a.IsActive)
             .Select(a => new GetAppointmentResponse(
                 a.Id,
@@ -45,7 +40,17 @@ public class GetAppointmentHandler(TurnosDbContext dbContext)
                 a.Status.ToString(),
                 a.Notes,
                 a.CreatedAt,
-                a.UpdatedAt))
+                a.UpdatedAt,
+                a.Files
+                    .OrderBy(f => f.UploadedAt)
+                    .Select(f => new AppointmentFileResponse(
+                        f.Id,
+                        f.AppointmentId,
+                        f.FilePathOrUrl,
+                        f.FileName,
+                        f.FileType,
+                        f.UploadedAt))
+                    .ToList()))
             .FirstOrDefaultAsync(cancellationToken);
 
         if (appointment is null)

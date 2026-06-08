@@ -18,5 +18,15 @@ public record GetAppointmentResponse(
     string Status,
     string? Notes,
     DateTime CreatedAt,
-    DateTime UpdatedAt
+    DateTime UpdatedAt,
+    List<AppointmentFileResponse> Files
+);
+
+public record AppointmentFileResponse(
+    Guid Id,
+    Guid AppointmentId,
+    string FilePathOrUrl,
+    string FileName,
+    string FileType,
+    DateTime UploadedAt
 );
