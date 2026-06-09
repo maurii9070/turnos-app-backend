@@ -12,6 +12,9 @@ public class Payment
     public string? ReceiptUrl { get; set; }
     public DateTime? PaymentDeadline { get; set; }
     public DateTime? PaidAt { get; set; }
+    public string? PreferenceId { get; set; }
+    public string? MercadoPagoPaymentId { get; set; }
+    public string? ExternalReference { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

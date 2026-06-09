@@ -3,6 +3,7 @@ using Turnos.Api.Features.Appointments.CancelAppointment;
 using Turnos.Api.Features.Appointments.CompleteAppointment;
 using Turnos.Api.Features.Appointments.ConfirmAppointment;
 using Turnos.Api.Features.Appointments.CreateAppointment;
+using Turnos.Api.Features.Appointments.CreateAppointmentWithMercadoPago;
 using Turnos.Api.Features.Appointments.GetAppointment;
 using Turnos.Api.Features.Appointments.ListDoctorAppointments;
 using Turnos.Api.Features.Appointments.ListAppointments;
@@ -33,6 +34,10 @@ using Turnos.Api.Features.Patients.GetPatientByDni;
 using Turnos.Api.Features.Patients.ListPatients;
 using Turnos.Api.Features.Admins.CreateAdmin;
 using Turnos.Api.Features.Payments.CreatePayment;
+using Turnos.Api.Features.Payments.CreateMercadoPagoPreference;
+using Turnos.Api.Features.Payments.GetMercadoPagoPaymentStatus;
+using Turnos.Api.Features.Payments.MercadoPagoWebhook;
+using Turnos.Api.Features.Payments.SyncMercadoPagoPayment;
 using Turnos.Api.Features.Payments.UpdatePaymentStatus;
 using Turnos.Api.Features.Users.ChangePassword;
 using Turnos.Api.Features.Users.GetCurrentUser;
@@ -70,6 +75,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DeleteAvailabilityHandler>();
 
         services.AddScoped<CreateAppointmentHandler>();
+        services.AddScoped<CreateAppointmentWithMercadoPagoHandler>();
         services.AddScoped<ListMyAppointmentsHandler>();
         services.AddScoped<ListDoctorAppointmentsHandler>();
         services.AddScoped<GetAppointmentHandler>();
@@ -84,6 +90,10 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<CreatePaymentHandler>();
         services.AddScoped<UpdatePaymentStatusHandler>();
+        services.AddScoped<CreateMercadoPagoPreferenceHandler>();
+        services.AddScoped<MercadoPagoWebhookHandler>();
+        services.AddScoped<GetMercadoPagoPaymentStatusHandler>();
+        services.AddScoped<SyncMercadoPagoPaymentHandler>();
 
         services.AddScoped<UploadAppointmentFileHandler>();
 

@@ -11,6 +11,7 @@ builder.Services.AddTurnosAuth(builder.Configuration);
 builder.Services.AddTurnosRateLimiting();
 builder.Services.AddTurnosCors(builder.Configuration);
 builder.Services.AddTurnosHandlers();
+builder.Services.AddMercadoPagoServices(builder.Configuration);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -24,7 +25,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("Frontend");
 app.UseRateLimiter();
 app.UseAuthentication();

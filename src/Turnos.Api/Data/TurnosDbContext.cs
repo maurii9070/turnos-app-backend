@@ -244,6 +244,18 @@ public sealed class TurnosDbContext : DbContext
 
             entity.Property(e => e.ReceiptUrl)
                 .HasMaxLength(500);
+
+            entity.Property(e => e.PreferenceId)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.MercadoPagoPaymentId)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.ExternalReference)
+                .HasMaxLength(100);
+
+            entity.HasIndex(e => e.PreferenceId);
+            entity.HasIndex(e => e.ExternalReference);
         });
     }
 

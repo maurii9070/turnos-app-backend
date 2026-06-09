@@ -379,7 +379,7 @@ Authorization: Bearer {{patientToken}}
 }
 
 ###  @name createPaymentMercadoPago
-# Crear pago con MercadoPago (debe fallar con 400 — se gestiona en otro endpoint)
+# Crear pago con MercadoPago (debe fallar con 409 — se gestiona en otro endpoint)
 POST {{Api_HostAddress}}/appointments/{{createAppointment.response.body.data.id}}/payment
 Content-Type: {{contentType}}
 Authorization: Bearer {{patientToken}}
@@ -420,7 +420,7 @@ POST {{Api_HostAddress}}/auth/login
 Content-Type: {{contentType}}
 
 {
-  "dni": "40565354",
+  "dni": "40565353",
   "password": "123123"
 }
 ###
@@ -588,6 +588,68 @@ Authorization: Bearer {{accessToken}}
 {
   "currentPassword": "123123",
   "newPassword": "newPass456"
+}
+
+###
+
+# ==========================================
+# Mercado Pago — Checkout PRO
+# ==========================================
+
+# --- Requisitos previos ---
+# 1. Ejecutar createSpecialty, createDoctor, setSchedules y loginAsPatient
+# 2. Asegurar que appsettings.Development.json tenga AccessToken de sandbox de MP válido
+# 3. Tener un usuario comprador de prueba creado en Tus Integraciones > Cuentas de prueba
+
+#  @name createMercadoPagoAppointment
+# ┌─────────────────────────────────────────────────┐
+# │ PASO 1: Crear turno + link de pago             │
+# │ Devuelve initPoint (abrirlo en el navegador)   │
+# │ y paymentId (para consultar/sincronizar después)│
+# └─────────────────────────────────────────────────┘
+POST {{Api_HostAddress}}/appointments/mercadopago
+Content-Type: {{contentType}}
+Authorization: Bearer {{patientToken}}
+
+{
+  "doctorId": "b978e139-9153-4f9f-a4c9-633a7c988a87",
+  "date": "2026-06-10",
+  "startTime": "11:30",
+  "notes": "Consulta de prueba Mercado Pago",
+  "payerEmail": "correo@correo.com",
+  "payerFirstName": "Juan",
+  "payerLastName": "Pérez"
+}
+###
+#  @name getMercadoPagoPaymentStatus
+# ┌─────────────────────────────────────────────────┐
+# │ PASO 2 (opcional): Consultar estado del pago   │
+# │ Útil para polling mientras esperás el webhook   │
+# └─────────────────────────────────────────────────┘
+GET {{Api_HostAddress}}/payments/mercadopago/{{createMercadoPagoAppointment.response.body.data.paymentId}}/status
+Authorization: Bearer {{patientToken}}
+
+###  @name syncMercadoPagoPayment
+# ┌─────────────────────────────────────────────────┐
+# │ PASO 3: Sincronizar pago desde Mercado Pago     │
+# │ Sandbox NO envía webhooks, hay que forzar sync  │
+# │ Si el pago está Approved → confirma el turno     │
+# └─────────────────────────────────────────────────┘
+POST {{Api_HostAddress}}/payments/mercadopago/{{createMercadoPagoAppointment.response.body.data.paymentId}}/sync
+Authorization: Bearer {{patientToken}}
+
+###  @name mercadoPagoWebhook
+# ┌─────────────────────────────────────────────────┐
+# │ Simular notificación webhook (testing manual)   │
+# │ Endpoint anónimo, no requiere token             │
+# │ En producción MP envía este POST automáticamente│
+# └─────────────────────────────────────────────────┘
+POST {{Api_HostAddress}}/payments/mercadopago/webhook
+Content-Type: application/json
+
+{
+  "type": "payment",
+  "data": {"id": "123456789"}
 }
 
 ###
