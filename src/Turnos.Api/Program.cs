@@ -30,6 +30,8 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }));
+
 app.MapEndpoints();
 
 app.Run();
