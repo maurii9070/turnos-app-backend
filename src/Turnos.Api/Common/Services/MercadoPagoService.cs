@@ -64,9 +64,9 @@ public class MercadoPagoService : IMercadoPagoService
         {
             body["back_urls"] = new
             {
-                success = $"{_settings.FrontendBaseUrl}/appointments?status=success",
-                failure = $"{_settings.FrontendBaseUrl}/appointments?status=failure",
-                pending = $"{_settings.FrontendBaseUrl}/appointments?status=pending"
+                success = $"{_settings.FrontendBaseUrl}/pacientes/pago-resultado?status=success",
+                failure = $"{_settings.FrontendBaseUrl}/pacientes/pago-resultado?status=failure",
+                pending = $"{_settings.FrontendBaseUrl}/pacientes/pago-resultado?status=pending"
             };
             body["auto_return"] = "approved";
         }

@@ -13,5 +13,6 @@ public record ListMyAppointmentsResponse(
     string StartTime,
     string Status,
     string? Notes,
-    string? PaymentMethod
+    string? PaymentMethod,
+    Guid? PaymentId
 );

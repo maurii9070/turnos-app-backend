@@ -56,7 +56,8 @@ public class ListMyAppointmentsHandler(TurnosDbContext dbContext)
                 a.StartTime.ToString("HH:mm"),
                 a.Status.ToString(),
                 a.Notes,
-                a.Payment != null ? a.Payment.Method.ToString() : null))
+                a.Payment != null ? a.Payment.Method.ToString() : null,
+                a.Payment != null ? a.Payment.Id : (Guid?)null))
             .ToListAsync(cancellationToken);
 
         return ApiResponse<List<ListMyAppointmentsResponse>>.Ok(appointments);
