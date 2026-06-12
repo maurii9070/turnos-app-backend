@@ -61,15 +61,35 @@ public class UploadAppointmentFileHandler(TurnosDbContext dbContext)
 
         var transitionedToReview = false;
 
-        if (isPatient && appointment.Status == AppointmentStatus.PendingPayment)
+        if (isPatient)
         {
-            appointment.Status = AppointmentStatus.PendingReview;
-            transitionedToReview = true;
+            var previousReceipts = await dbContext.AppointmentFiles
+                .Where(f => f.AppointmentId == appointmentId && f.Category == AppointmentFileCategory.Receipt)
+                .ToListAsync(cancellationToken);
 
-            if (appointment.Payment is not null && appointment.Payment.Status == PaymentStatus.Pending)
+            if (previousReceipts.Count > 0)
             {
-                appointment.Payment.ReceiptUrl = request.FilePathOrUrl.Trim();
-                appointment.Payment.UpdatedAt = DateTime.UtcNow;
+                dbContext.AppointmentFiles.RemoveRange(previousReceipts);
+            }
+
+            if (appointment.Status == AppointmentStatus.PendingPayment)
+            {
+                appointment.Status = AppointmentStatus.PendingReview;
+                transitionedToReview = true;
+
+                if (appointment.Payment is not null && appointment.Payment.Status == PaymentStatus.Pending)
+                {
+                    appointment.Payment.ReceiptUrl = request.FilePathOrUrl.Trim();
+                    appointment.Payment.UpdatedAt = DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                if (appointment.Payment is not null && appointment.Payment.Status == PaymentStatus.Pending)
+                {
+                    appointment.Payment.ReceiptUrl = request.FilePathOrUrl.Trim();
+                    appointment.Payment.UpdatedAt = DateTime.UtcNow;
+                }
             }
         }
 

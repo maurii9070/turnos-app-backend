@@ -1,3 +1,4 @@
+using Turnos.Api.Features.AppointmentFiles.DeleteAppointmentFile;
 using Turnos.Api.Features.AppointmentFiles.UploadAppointmentFile;
 using Turnos.Api.Features.Appointments.CancelAppointment;
 using Turnos.Api.Features.Appointments.CompleteAppointment;
@@ -96,6 +97,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SyncMercadoPagoPaymentHandler>();
 
         services.AddScoped<UploadAppointmentFileHandler>();
+        services.AddScoped<DeleteAppointmentFileHandler>();
 
         services.AddScoped<CreateAdminHandler>();
 
