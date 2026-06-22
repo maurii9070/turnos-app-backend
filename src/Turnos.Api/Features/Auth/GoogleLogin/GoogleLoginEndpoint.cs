@@ -2,16 +2,16 @@ using FluentValidation;
 using Turnos.Api.Common.Contracts;
 using Turnos.Api.Common.Responses;
 
-namespace Turnos.Api.Features.Auth.Login;
+namespace Turnos.Api.Features.Auth.GoogleLogin;
 
-public class LoginEndpoint : IEndpoint
+public class GoogleLoginEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/auth/login", async (
-            LoginRequest request,
-            LoginHandler handler,
-            IValidator<LoginRequest> validator,
+        app.MapPost("api/auth/google", async (
+            GoogleLoginRequest request,
+            GoogleLoginHandler handler,
+            IValidator<GoogleLoginRequest> validator,
             HttpContext httpContext,
             CancellationToken ct) =>
         {
@@ -38,9 +38,9 @@ public class LoginEndpoint : IEndpoint
 
             return Results.Ok(response);
         })
-        .WithName("Login")
+        .WithName("GoogleLogin")
         .RequireRateLimiting("login")
-        .Produces<ApiResponse<LoginResponse>>(StatusCodes.Status200OK)
+        .Produces<ApiResponse<GoogleLoginResponse>>(StatusCodes.Status200OK)
         .Produces<HttpValidationProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status401Unauthorized);
     }

@@ -59,11 +59,13 @@ public class UpdateProfileHandler(TurnosDbContext dbContext)
             user.Id,
             user.Dni,
             user.Email,
+            user.GoogleId,
             user.FirstName,
             user.LastName,
             user.Phone,
             user.Role.ToString(),
             user.MustChangePassword,
+            user.RequiresDni,
             user.Patient?.Id,
             user.Patient?.DateOfBirth,
             user.Doctor?.Id);

@@ -28,6 +28,11 @@ public class ChangePasswordHandler(TurnosDbContext dbContext, IPasswordHasher pa
             return ApiResponse<ChangePasswordResponse>.Fail("Usuario no encontrado.");
         }
 
+        if (string.IsNullOrEmpty(user.PasswordHash))
+        {
+            return ApiResponse<ChangePasswordResponse>.Fail("Tu cuenta no tiene contraseña. Iniciá sesión con Google.");
+        }
+
         if (!passwordHasher.VerifyPassword(request.CurrentPassword, user.PasswordHash))
         {
             return ApiResponse<ChangePasswordResponse>.Fail("La contraseña actual es incorrecta.");

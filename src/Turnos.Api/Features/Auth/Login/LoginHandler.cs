@@ -21,6 +21,11 @@ public sealed class LoginHandler(TurnosDbContext dbContext, IPasswordHasher pass
             return (ApiResponse<LoginResponse>.Fail("Credenciales inválidas."), null);
         }
 
+        if (string.IsNullOrEmpty(user.PasswordHash))
+        {
+            return (ApiResponse<LoginResponse>.Fail("Esta cuenta no tiene contraseña. Iniciá sesión con Google."), null);
+        }
+
         if (!passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
             return (ApiResponse<LoginResponse>.Fail("Credenciales inválidas."), null);

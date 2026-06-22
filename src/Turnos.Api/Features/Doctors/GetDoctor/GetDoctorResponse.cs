@@ -9,7 +9,7 @@ public record SpecialtyInfo(Guid Id, string Name);
 public record GetDoctorResponse(
     Guid DoctorId,
     Guid UserId,
-    string Dni,
+    string? Dni,
     string FirstName,
     string LastName,
     string? Email,

@@ -3,7 +3,7 @@ namespace Turnos.Api.Features.Doctors.ListDoctors;
 public record ListDoctorsResponse(
     Guid DoctorId,
     Guid UserId,
-    string Dni,
+    string? Dni,
     string FirstName,
     string LastName,
     Guid SpecialtyId,
