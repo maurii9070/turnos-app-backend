@@ -18,13 +18,17 @@ public sealed class JwtTokenService(IOptions<JwtSettings> options) : ITokenServi
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim("dni", user.Dni),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
+
+        if (!string.IsNullOrEmpty(user.Dni))
+        {
+            claims.Add(new Claim("dni", user.Dni));
+        }
 
         var token = new JwtSecurityToken(
             issuer: _settings.Issuer,

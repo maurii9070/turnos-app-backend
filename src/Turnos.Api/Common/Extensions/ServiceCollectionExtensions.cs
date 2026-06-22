@@ -9,6 +9,8 @@ using Turnos.Api.Features.Appointments.GetAppointment;
 using Turnos.Api.Features.Appointments.ListDoctorAppointments;
 using Turnos.Api.Features.Appointments.ListAppointments;
 using Turnos.Api.Features.Appointments.ListMyAppointments;
+using Turnos.Api.Features.Auth.CompleteDni;
+using Turnos.Api.Features.Auth.GoogleLogin;
 using Turnos.Api.Features.Auth.Login;
 using Turnos.Api.Features.Auth.Logout;
 using Turnos.Api.Features.Auth.RefreshToken;
@@ -42,6 +44,7 @@ using Turnos.Api.Features.Payments.SyncMercadoPagoPayment;
 using Turnos.Api.Features.Payments.UpdatePaymentStatus;
 using Turnos.Api.Features.Users.ChangePassword;
 using Turnos.Api.Features.Users.GetCurrentUser;
+using Turnos.Api.Features.Users.LinkGoogle;
 using Turnos.Api.Features.Users.UpdateProfile;
 
 namespace Turnos.Api.Common.Extensions;
@@ -58,6 +61,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<RegisterPatientHandler>();
         services.AddScoped<LoginHandler>();
+        services.AddScoped<GoogleLoginHandler>();
+        services.AddScoped<CompleteDniHandler>();
         services.AddScoped<RefreshTokenHandler>();
         services.AddScoped<LogoutHandler>();
 
@@ -88,6 +93,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetCurrentUserHandler>();
         services.AddScoped<UpdateProfileHandler>();
         services.AddScoped<ChangePasswordHandler>();
+        services.AddScoped<LinkGoogleHandler>();
 
         services.AddScoped<CreatePaymentHandler>();
         services.AddScoped<UpdatePaymentStatusHandler>();

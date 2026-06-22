@@ -2,7 +2,7 @@ namespace Turnos.Api.Features.Admins.CreateAdmin;
 
 public record CreateAdminResponse(
     Guid UserId,
-    string Dni,
+    string? Dni,
     string FirstName,
     string LastName,
     string Role,

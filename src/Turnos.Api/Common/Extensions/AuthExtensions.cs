@@ -15,6 +15,7 @@ public static class AuthExtensions
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey));
 
         services.Configure<Security.JwtSettings>(configuration.GetSection("JwtSettings"));
+        services.Configure<Security.SupabaseAuthSettings>(configuration.GetSection("Supabase"));
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -36,6 +37,8 @@ public static class AuthExtensions
 
         services.AddScoped<IPasswordHasher, Security.BCryptPasswordHasher>();
         services.AddScoped<ITokenService, Security.JwtTokenService>();
+
+        services.AddHttpClient<ISupabaseAuthClient, Security.SupabaseAuthClient>();
 
         return services;
     }

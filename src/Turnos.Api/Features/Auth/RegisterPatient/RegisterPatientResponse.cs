@@ -2,7 +2,7 @@ namespace Turnos.Api.Features.Auth.RegisterPatient;
 
 public record RegisterPatientResponse(
     Guid Id,
-    string Dni,
+    string? Dni,
     string FirstName,
     string LastName,
     string Role,

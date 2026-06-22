@@ -5,7 +5,7 @@ public record GetAppointmentResponse(
     Guid PatientId,
     string PatientFirstName,
     string PatientLastName,
-    string PatientDni,
+    string? PatientDni,
     Guid DoctorId,
     string DoctorFirstName,
     string DoctorLastName,

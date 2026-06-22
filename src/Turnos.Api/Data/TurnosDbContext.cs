@@ -46,7 +46,6 @@ public sealed class TurnosDbContext : DbContext
             entity.HasIndex(e => e.Dni).IsUnique();
 
             entity.Property(e => e.Dni)
-                .IsRequired()
                 .HasMaxLength(20);
 
             entity.HasIndex(e => e.Email).IsUnique();
@@ -54,8 +53,10 @@ public sealed class TurnosDbContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(256);
 
-            entity.Property(e => e.PasswordHash)
-                .IsRequired();
+            entity.HasIndex(e => e.GoogleId).IsUnique();
+
+            entity.Property(e => e.GoogleId)
+                .HasMaxLength(255);
 
             entity.Property(e => e.Phone)
                 .HasMaxLength(30);

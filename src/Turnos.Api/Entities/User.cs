@@ -5,15 +5,17 @@ namespace Turnos.Api.Entities;
 public class User
 {
     public Guid Id { get; set; }
-    public string Dni { get; set; } = null!;
+    public string? Dni { get; set; }
     public string? Email { get; set; }
-    public string PasswordHash { get; set; } = null!;
+    public string? GoogleId { get; set; }
+    public string? PasswordHash { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     public string? Phone { get; set; }
     public UserRole Role { get; set; }
     public Guid? RegisteredBy { get; set; }
     public bool MustChangePassword { get; set; } = false;
+    public bool RequiresDni { get; set; } = false;
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
