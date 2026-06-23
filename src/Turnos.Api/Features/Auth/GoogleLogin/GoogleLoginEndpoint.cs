@@ -1,6 +1,8 @@
 using FluentValidation;
+using Microsoft.Extensions.Options;
 using Turnos.Api.Common.Contracts;
 using Turnos.Api.Common.Responses;
+using Turnos.Api.Common.Security;
 
 namespace Turnos.Api.Features.Auth.GoogleLogin;
 
@@ -12,6 +14,7 @@ public class GoogleLoginEndpoint : IEndpoint
             GoogleLoginRequest request,
             GoogleLoginHandler handler,
             IValidator<GoogleLoginRequest> validator,
+            IOptions<CookieSettings> cookieOptions,
             HttpContext httpContext,
             CancellationToken ct) =>
         {
@@ -28,10 +31,12 @@ public class GoogleLoginEndpoint : IEndpoint
                 return Results.Unauthorized();
             }
 
+            var cookieSettings = cookieOptions.Value;
             httpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = cookieSettings.GetSameSiteMode(),
+                Secure = cookieSettings.Secure,
                 MaxAge = TimeSpan.FromDays(7),
                 Path = "/"
             });
