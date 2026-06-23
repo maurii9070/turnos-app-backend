@@ -16,6 +16,7 @@ public static class AuthExtensions
 
         services.Configure<Security.JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<Security.SupabaseAuthSettings>(configuration.GetSection("Supabase"));
+        services.Configure<Security.CookieSettings>(configuration.GetSection("CookieSettings"));
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
