@@ -26,7 +26,23 @@ public sealed class RefreshTokenHandler(TurnosDbContext dbContext, ITokenService
         }
 
         var accessToken = tokenService.GenerateAccessToken(refreshToken.User);
-        var response = new RefreshTokenResponse(accessToken, refreshToken.User.Role.ToString());
+        var newRefreshTokenValue = tokenService.GenerateRefreshToken();
+
+        dbContext.RefreshTokens.Remove(refreshToken);
+
+        var newRefreshToken = new Entities.RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = refreshToken.User.Id,
+            Token = newRefreshTokenValue,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        dbContext.RefreshTokens.Add(newRefreshToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        var response = new RefreshTokenResponse(accessToken, newRefreshTokenValue, refreshToken.User.Role.ToString());
 
         return ApiResponse<RefreshTokenResponse>.Ok(response, "Token refrescado correctamente.");
     }

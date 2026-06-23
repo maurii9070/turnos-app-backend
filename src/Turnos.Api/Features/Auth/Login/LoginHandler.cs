@@ -8,7 +8,7 @@ namespace Turnos.Api.Features.Auth.Login;
 
 public sealed class LoginHandler(TurnosDbContext dbContext, IPasswordHasher passwordHasher, ITokenService tokenService)
 {
-    public async Task<(ApiResponse<LoginResponse> Response, string? RefreshToken)> HandleAsync(
+    public async Task<ApiResponse<LoginResponse>> HandleAsync(
         LoginRequest request,
         CancellationToken cancellationToken)
     {
@@ -18,22 +18,22 @@ public sealed class LoginHandler(TurnosDbContext dbContext, IPasswordHasher pass
 
         if (user is null)
         {
-            return (ApiResponse<LoginResponse>.Fail("Credenciales inválidas."), null);
+            return ApiResponse<LoginResponse>.Fail("Credenciales inválidas.");
         }
 
         if (string.IsNullOrEmpty(user.PasswordHash))
         {
-            return (ApiResponse<LoginResponse>.Fail("Esta cuenta no tiene contraseña. Iniciá sesión con Google."), null);
+            return ApiResponse<LoginResponse>.Fail("Esta cuenta no tiene contraseña. Iniciá sesión con Google.");
         }
 
         if (!passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
-            return (ApiResponse<LoginResponse>.Fail("Credenciales inválidas."), null);
+            return ApiResponse<LoginResponse>.Fail("Credenciales inválidas.");
         }
 
         if (!user.IsActive)
         {
-            return (ApiResponse<LoginResponse>.Fail("Usuario deshabilitado."), null);
+            return ApiResponse<LoginResponse>.Fail("Usuario deshabilitado.");
         }
 
         var accessToken = tokenService.GenerateAccessToken(user);
@@ -59,7 +59,7 @@ public sealed class LoginHandler(TurnosDbContext dbContext, IPasswordHasher pass
         dbContext.RefreshTokens.Add(refreshToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new LoginResponse(accessToken, user.Role.ToString());
-        return (ApiResponse<LoginResponse>.Ok(response, "Inicio de sesión exitoso."), refreshTokenValue);
+        var response = new LoginResponse(accessToken, refreshTokenValue, user.Role.ToString());
+        return ApiResponse<LoginResponse>.Ok(response, "Inicio de sesión exitoso.");
     }
 }

@@ -12,7 +12,7 @@ public sealed class GoogleLoginHandler(
     ISupabaseAuthClient supabaseAuthClient,
     ITokenService tokenService)
 {
-    public async Task<(ApiResponse<GoogleLoginResponse> Response, string? RefreshToken)> HandleAsync(
+    public async Task<ApiResponse<GoogleLoginResponse>> HandleAsync(
         GoogleLoginRequest request,
         CancellationToken cancellationToken)
     {
@@ -20,12 +20,12 @@ public sealed class GoogleLoginHandler(
 
         if (supabaseUser is null)
         {
-            return (ApiResponse<GoogleLoginResponse>.Fail("Token de Google inválido."), null);
+            return ApiResponse<GoogleLoginResponse>.Fail("Token de Google inválido.");
         }
 
         if (!supabaseUser.EmailVerified)
         {
-            return (ApiResponse<GoogleLoginResponse>.Fail("El email de Google no está verificado."), null);
+            return ApiResponse<GoogleLoginResponse>.Fail("El email de Google no está verificado.");
         }
 
         var existingUser = await dbContext.Users
@@ -60,14 +60,14 @@ public sealed class GoogleLoginHandler(
         return await CreateGoogleUserAsync(supabaseUser, cancellationToken);
     }
 
-    private async Task<(ApiResponse<GoogleLoginResponse> Response, string? RefreshToken)> AuthenticateUserAsync(
+    private async Task<ApiResponse<GoogleLoginResponse>> AuthenticateUserAsync(
         User user,
         Common.Security.SupabaseUserInfo supabaseUser,
         CancellationToken cancellationToken)
     {
         if (!user.IsActive)
         {
-            return (ApiResponse<GoogleLoginResponse>.Fail("Usuario deshabilitado."), null);
+            return ApiResponse<GoogleLoginResponse>.Fail("Usuario deshabilitado.");
         }
 
         if (supabaseUser.FirstName is not null && supabaseUser.LastName is not null)
@@ -107,11 +107,11 @@ public sealed class GoogleLoginHandler(
         dbContext.RefreshTokens.Add(refreshToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new GoogleLoginResponse(accessToken, user.Role.ToString());
-        return (ApiResponse<GoogleLoginResponse>.Ok(response, "Inicio de sesión exitoso."), refreshTokenValue);
+        var response = new GoogleLoginResponse(accessToken, refreshTokenValue, user.Role.ToString());
+        return ApiResponse<GoogleLoginResponse>.Ok(response, "Inicio de sesión exitoso.");
     }
 
-    private async Task<(ApiResponse<GoogleLoginResponse> Response, string? RefreshToken)> CreateGoogleUserAsync(
+    private async Task<ApiResponse<GoogleLoginResponse>> CreateGoogleUserAsync(
         Common.Security.SupabaseUserInfo supabaseUser,
         CancellationToken cancellationToken)
     {
@@ -156,7 +156,7 @@ public sealed class GoogleLoginHandler(
         dbContext.RefreshTokens.Add(refreshToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new GoogleLoginResponse(accessToken, user.Role.ToString());
-        return (ApiResponse<GoogleLoginResponse>.Ok(response, "Cuenta creada correctamente. Completá tu DNI para continuar."), refreshTokenValue);
+        var response = new GoogleLoginResponse(accessToken, refreshTokenValue, user.Role.ToString());
+        return ApiResponse<GoogleLoginResponse>.Ok(response, "Cuenta creada correctamente. Completá tu DNI para continuar.");
     }
 }

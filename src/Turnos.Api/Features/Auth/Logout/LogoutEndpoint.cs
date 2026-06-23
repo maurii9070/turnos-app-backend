@@ -12,8 +12,10 @@ public class LogoutEndpoint : IEndpoint
             HttpContext httpContext,
             CancellationToken ct) =>
         {
-            if (httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshTokenValue) &&
-                !string.IsNullOrWhiteSpace(refreshTokenValue))
+            var refreshTokenValue = httpContext.Request.Headers["X-Refresh-Token"].FirstOrDefault()
+                ?? httpContext.Request.Cookies["refreshToken"];
+
+            if (!string.IsNullOrWhiteSpace(refreshTokenValue))
             {
                 await handler.HandleAsync(refreshTokenValue, ct);
             }
